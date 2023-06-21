@@ -4,7 +4,8 @@
   "description": "Pembahagi tugas guru bagi program, kelab dan persatuan di MRSM",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config webpack.config.js --color"
   },
   "repository": {
     "type": "git",

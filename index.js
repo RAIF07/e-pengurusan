@@ -30,7 +30,7 @@ const auth = getAuth();
 
 auth.languageCode = 'en';
 // To apply the default browser preference instead of explicitly setting it.
-firebase.auth().useDeviceLanguage();
+// firebase.auth().useDeviceLanguage();
 
 // Additional scope requests can be passed as an array of strings.
 provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
