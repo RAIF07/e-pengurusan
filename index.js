@@ -1,8 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { GoogleAuthProvider } from "firebase/auth";
-import { getAuth, signOut } from "firebase/auth";
+import { GoogleAuthProvider, signInWithRedirect, getRedirectResult, getAuth, signOut } from "firebase/auth";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -27,6 +26,28 @@ const analytics = getAnalytics(app);
 
 const provider = new GoogleAuthProvider();
 const auth = getAuth();
+getRedirectResult(getAuth())
+.then((result) => {
+  // This gives you a Google Access Token. You can use it to access Google APIs.
+  const credential = GoogleAuthProvider.credentialFromResult(result);
+  const token = credential.accessToken;
+
+  // The signed-in user info.
+  const user = result.user;
+  // IdP data available using getAdditionalUserInfo(result)
+  // ...
+
+  console.log("Sign in successful! Signed in as: " + result.user.displayName)
+}).catch((error) => {
+  // Handle Errors here.
+  const errorCode = error.code;
+  const errorMessage = error.message;
+  // The email of the user's account used.
+  // const email = error.customData.email;
+  // The AuthCredential type that was used.
+  const credential = GoogleAuthProvider.credentialFromError(error);
+  // ...
+});
 
 auth.languageCode = 'en';
 // To apply the default browser preference instead of explicitly setting it.
@@ -35,41 +56,22 @@ auth.languageCode = 'en';
 // Additional scope requests can be passed as an array of strings.
 provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
 
-document.onload = function() {
-  signInButton = document.getElementById('signInButton');
+function signTheUserIn() {  
+  signInWithRedirect(auth, provider);
+}
+
+document.body.onload = function() {
+  const signInButton = document.getElementById('signInButton');
 
   signInButton.addEventListener('click', () => {
+    console.log("Sign in button clicked!")
+    signTheUserIn();
+  })
+
+
+
   
-    signInWithRedirect(auth, provider);
-  }  
-    )
-  
-  getRedirectResult(auth)
-    .then((result) => {
-      // This gives you a Google Access Token. You can use it to access Google APIs.
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential.accessToken;
-  
-      // The signed-in user info.
-      const user = result.user;
-      // IdP data available using getAdditionalUserInfo(result)
-      // ...
-  
-      console.log("Sign in successful! Signed in as: " + result.user.displayName)
-    }).catch((error) => {
-      // Handle Errors here.
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      // The email of the user's account used.
-      const email = error.customData.email;
-      // The AuthCredential type that was used.
-      const credential = GoogleAuthProvider.credentialFromError(error);
-      // ...
-    });
-  
-  // 
-  
-  signOutButton = document.getElementById('signOutButton');
+  const signOutButton = document.getElementById('signOutButton');
   
   signOutButton.addEventListener('click', () => { 
   
@@ -81,4 +83,5 @@ document.onload = function() {
   
   })
 }
+
 
